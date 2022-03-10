@@ -14,6 +14,10 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {
     type?: 'spinner' | 'progress';
     /** Determines whether the LoadingState is open or not */
     loading?: boolean;
+    /** Required string for WCAG 2.0 authentication purposes */
+    name: string;
+    /** Required string for WCAG 2.0 authentication purposes */
+    label: string;
 }
 
 /**
@@ -29,6 +33,8 @@ export const LoadingState: FC<Props> = ({
     className,
     children = undefined,
     style,
+    name,
+    label,
     ...props
 }) => {
     // ref
@@ -79,12 +85,15 @@ export const LoadingState: FC<Props> = ({
             ariaProps['aria-valuemax'] = '100';
             ariaProps['aria-valuemin'] = '0';
             ariaProps['aria-valuetext'] = 'Loading Process';
+
+            // assign names & labels
+            label && (ariaProps['aria-labelledby'] = label);
         } else {
             ariaProps['aria-busy'] = loading ? 'true' : 'false';
         }
 
         return (
-            <div {...ariaProps} className={containerName} ref={progressRef}>
+            <div {...ariaProps} className={containerName} title={name} ref={progressRef}>
                 <div
                     {...props}
                     style={loadingStyle}
@@ -92,6 +101,7 @@ export const LoadingState: FC<Props> = ({
                         ${loadingType}
                         ${size}
                     `}
+                    title={name}
                 />
             </div>
         );
@@ -100,7 +110,10 @@ export const LoadingState: FC<Props> = ({
     return (
         <>
             {loading ? (
-                <div className="apollo-component-library-loadingstate-component-container">
+                <div
+                    className="apollo-component-library-loadingstate-component-container"
+                    tabIndex={0}
+                >
                     {renderLoadingState()}
                 </div>
             ) : null}

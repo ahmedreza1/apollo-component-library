@@ -8,6 +8,8 @@ const meta: Meta = {
     component: LoadingState,
     args: {
         type: 'spinner',
+        name: 'LoadedProgressBar',
+        label: 'progressbar_id',
     },
 };
 
