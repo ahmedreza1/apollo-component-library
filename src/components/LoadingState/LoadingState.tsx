@@ -16,7 +16,7 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {
     loading?: boolean;
     /** Required string for WCAG 2.0 authentication purposes */
     name: string;
-    /** Required string for WCAG 2.0 authentication purposes */
+    /** Required aia-label for WCAG 2.0 authentication purposes */
     label: string;
 }
 
