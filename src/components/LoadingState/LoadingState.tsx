@@ -90,6 +90,7 @@ export const LoadingState: FC<Props> = ({
             label && (ariaProps['aria-labelledby'] = label);
         } else {
             ariaProps['aria-busy'] = loading ? 'true' : 'false';
+            label && (ariaProps['aria-labelledby'] = label);
         }
 
         return (

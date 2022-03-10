@@ -1,22 +1,37 @@
 import React from 'react';
 import { screen, render } from '@testing-library/react';
-
-import { LoadingState } from '../src';
+import userEvent from '@testing-library/user-event';
 import { axe, toHaveNoViolations } from 'jest-axe';
 expect.extend(toHaveNoViolations);
 
-// inside test
+import { LoadingState } from '../src';
+
 it('...', async () => {
     // given: you need to test all variants of this component, make sure all states are present
     const { container: progressBar } = render(
-        <LoadingState loading name="LoadedProgressBar" label="progressbar_id" />
+        <LoadingState
+            loading
+            size="large"
+            type="progress"
+            progress={0.5}
+            name="LoadingState"
+            label="progressbar_id"
+        />
     );
-    /* Add other states of the same component */
+
+    render(
+        <LoadingState size="large" type="spinner" loading name="LoadingState" label="spinner_id" />
+    );
+
+    userEvent.click(screen.getAllByTitle(/loadingstate/i)[0]);
+    // eslint-disable-next-line prefer-destructuring
+    const loader = screen.getAllByTitle(/LoadingState/i)[0];
 
     // when
     const results = [];
     results[0] = await axe(progressBar);
-    /* get axe results from the other states of the same component */
+    if (loader?.parentElement?.parentElement)
+        results[1] = await axe(loader.parentElement.parentElement);
 
     // then
     results.forEach((result: any) => expect(result).toHaveNoViolations());
@@ -61,13 +76,7 @@ describe('LoadingState', () => {
     it('will render the spinner type', () => {
         // given
         render(
-            <LoadingState
-                loading
-                name="LoadedProgressBar"
-                label="progressbar_id"
-                size="large"
-                type="spinner"
-            />
+            <LoadingState loading name="Spinner" label="spinner_id" size="large" type="spinner" />
         );
         const loading = document.querySelector('[aria-busy="true"]');
 
