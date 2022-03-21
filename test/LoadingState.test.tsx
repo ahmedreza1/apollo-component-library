@@ -1,6 +1,5 @@
 import React from 'react';
 import { screen, render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { axe, toHaveNoViolations } from 'jest-axe';
 expect.extend(toHaveNoViolations);
 
@@ -38,9 +37,38 @@ it('...', async () => {
 });
 
 describe('LoadingState', () => {
+    it('complies with WCAG 2.0', async () => {
+        // given: you need to test all variants of this component, make sure all states are present
+        const { container: progressBar } = render(
+            <LoadingState
+                loading
+                size="large"
+                type="progress"
+                progress={0.5}
+                label="progressbar_id"
+            />
+        );
+
+        const { container: spinner } = render(
+            <LoadingState size="large" type="spinner" loading label="spinner_id" />
+        );
+
+        // when
+        const results = [];
+        results[0] = await axe(progressBar);
+        results[1] = await axe(spinner);
+
+        // then
+        results.forEach((result: any) => expect(result).toHaveNoViolations());
+    });
+
     it('renders correctly', () => {
         // given
+<<<<<<< HEAD
         render(<LoadingState loading name="LoadedProgressBar" label="progressbar_id" />);
+=======
+        render(<LoadingState loading label="progressbar_id" />);
+>>>>>>> 50f2fb0cfe35609d33e4c268c392a1fba059ccd6
         const loading = document.querySelector('[aria-busy="true"]');
 
         // when then
@@ -49,7 +77,11 @@ describe('LoadingState', () => {
 
     it('will not render', () => {
         // given
+<<<<<<< HEAD
         render(<LoadingState loading name="LoadedProgressBar" label="progressbar_id" />);
+=======
+        render(<LoadingState loading label="progressbar_id" />);
+>>>>>>> 50f2fb0cfe35609d33e4c268c392a1fba059ccd6
         const loading = document.querySelector('[aria-busy="false"]');
 
         // when then
@@ -61,7 +93,10 @@ describe('LoadingState', () => {
         render(
             <LoadingState
                 loading
+<<<<<<< HEAD
                 name="LoadedProgressBar"
+=======
+>>>>>>> 50f2fb0cfe35609d33e4c268c392a1fba059ccd6
                 label="progressbar_id"
                 size="large"
                 type="progress"
@@ -75,12 +110,16 @@ describe('LoadingState', () => {
 
     it('will render the spinner type', () => {
         // given
+<<<<<<< HEAD
         render(
             <LoadingState loading name="Spinner" label="spinner_id" size="large" type="spinner" />
         );
         const loading = document.querySelector('[aria-busy="true"]');
+=======
+        render(<LoadingState loading label="spinner_id" size="large" type="spinner" />);
+>>>>>>> 50f2fb0cfe35609d33e4c268c392a1fba059ccd6
 
         // when then
-        expect(loading).toBeTruthy();
+        expect(screen.queryByLabelText('spinner_id')).toBeInTheDocument();
     });
 });

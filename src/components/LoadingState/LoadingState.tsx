@@ -2,6 +2,8 @@ import type { HTMLAttributes, FC } from 'react';
 import React, { useState, useEffect, ReactNode, useRef, CSSProperties } from 'react';
 import './LoadingState.css';
 
+import { Text } from '../Text/Text';
+
 export interface ILoadingState extends HTMLAttributes<HTMLDivElement> {
     /**
      * Determines status of the progressbar where
@@ -14,8 +16,6 @@ export interface ILoadingState extends HTMLAttributes<HTMLDivElement> {
     type?: 'spinner' | 'progress';
     /** Determines whether the LoadingState is open or not */
     loading?: boolean;
-    /** Required string for WCAG 2.0 authentication purposes */
-    name: string;
     /** Required aia-label for WCAG 2.0 authentication purposes */
     label: string;
 }
@@ -33,7 +33,6 @@ export const LoadingState: FC<ILoadingState> = ({
     className,
     children = undefined,
     style,
-    name,
     label,
     ...props
 }) => {
@@ -90,11 +89,16 @@ export const LoadingState: FC<ILoadingState> = ({
             label && (ariaProps['aria-labelledby'] = label);
         } else {
             ariaProps['aria-busy'] = loading ? 'true' : 'false';
-            label && (ariaProps['aria-labelledby'] = label);
+            ariaProps['aria-labelledby'] = 'apollo-loading-state-description-text';
         }
 
         return (
-            <div {...ariaProps} className={containerName} title={name} ref={progressRef}>
+            <div {...ariaProps} className={containerName} aria-label={label} ref={progressRef}>
+                {type === 'spinner' ? (
+                    <Text inline id="apollo-loading-state-description-text">
+                        {label}
+                    </Text>
+                ) : null}
                 <div
                     {...props}
                     style={loadingStyle}
@@ -102,7 +106,6 @@ export const LoadingState: FC<ILoadingState> = ({
                         ${loadingType}
                         ${size}
                     `}
-                    title={name}
                 />
             </div>
         );
